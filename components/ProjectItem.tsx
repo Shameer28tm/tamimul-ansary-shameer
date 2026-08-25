@@ -1,0 +1,3 @@
+import { ArrowUpRight } from "lucide-react";
+import type { Project } from "@/data/portfolio";
+export function ProjectItem({ project }: { project: Project }) { return <article className="project"><div className={`project-art ${project.accent}`} aria-hidden="true"><span>{project.number}</span><div className="art-shape"/></div><div className="project-copy"><div className="meta"><span>{project.number}</span><span>{project.category}</span></div><h3>{project.title}</h3><p>{project.description}</p><div className="tags">{project.stack.map(s => <span key={s}>{s}</span>)}</div><a href="#contact" className="text-link">View project <ArrowUpRight size={15}/></a></div></article>; }

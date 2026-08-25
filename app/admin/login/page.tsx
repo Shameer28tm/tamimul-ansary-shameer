@@ -1,0 +1,3 @@
+import { login } from "./actions";
+export const metadata = { robots: { index: false, follow: false }, title: "Admin sign in" };
+export default async function Login({ searchParams }: {searchParams: Promise<{error?:string}>}) {const {error}=await searchParams;return <main className="admin-login"><form action={login}><p className="eyebrow">Private area</p><h1>Studio access</h1><p>Enter the password configured in your environment.</p><label htmlFor="password">Password</label><input id="password" name="password" type="password" required autoFocus/>{error&&<p className="form-error">That password did not match.</p>}<button>Enter admin</button></form></main>}

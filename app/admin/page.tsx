@@ -1,0 +1,5 @@
+import Link from "next/link";
+import { profile, projects, articles, journey, toolkit, certificates } from "@/data/portfolio";
+export const metadata = { robots: { index: false, follow: false }, title: "Content studio" };
+const groups=[ ["Identity", profile], ["Projects", projects], ["Writing", articles], ["Journey", journey], ["Toolkit", toolkit], ["Certificates", certificates] ];
+export default function Admin(){return <main className="admin-shell"><header><div><p className="eyebrow">Private content studio</p><h1>Portfolio canvas</h1></div><Link href="/" target="_blank">Open public preview ↗</Link></header><p className="admin-note">This is the structured content source for the portfolio. Edit the data modules in <code>data/portfolio.ts</code> to publish changes; a database adapter can replace this source for hosted multi-user editing.</p><div className="admin-grid">{groups.map(([name,data])=><section key={name as string}><h2>{name as string}</h2><pre>{JSON.stringify(data,null,2)}</pre><p>Structured and ready for add, edit, delete, reorder, and publish controls when connected to your preferred data store.</p></section>)}</div></main>}
