@@ -29,7 +29,7 @@ export const journey: JourneyEntry[] = [
  {period:"Present",title:"Zcloud Digitech",copy:"I am building Zcloud Digitech, working on freelance projects, and continuing to experiment with emerging technology. AI, automation, mathematics, physics, and intelligent systems are all part of the current exploration. I am still learning. Still building. Still experimenting. This is only the beginning."}
 ];
 export const toolkit = [["AI & Machine Learning","Python · OpenAI · Gemini · Groq · LangChain · LangGraph · Hugging Face · PyTorch · TensorFlow · Scikit-learn · RAG · Vector Databases · ChromaDB · Embeddings · AI Agents"],["Software Engineering","Next.js · React · TypeScript · JavaScript · Node.js · Express.js · FastAPI · React Native · Flutter"],["Data & Infrastructure","PostgreSQL · Supabase · SQLite · GitHub · Vercel"],["Automation & Voice","n8n · LiveKit · STT · TTS · AI Voice Agents"]];
-export const socialLinks = [{label:"GitHub",url:"https://github.com/Shameer28tm"},{label:"LinkedIn",url:"https://www.linkedin.com/in/shamee28r"},{label:"Instagram",url:"https://www.instagram.com/_shamee28r?igsh=MXN5N200cWVldDFl"}];
+export const socialLinks = [{label:"GitHub",url:"https://github.com/Shameer28tm"},{label:"LinkedIn",url:"https://www.linkedin.com/in/shameerion"},{label:"Instagram",url:"https://instagram.com/shameerion"}];
 // Add verified certificates here. This same shape is ready for a future CMS or Supabase adapter.
 export const certificates: Certificate[] = [
   {
