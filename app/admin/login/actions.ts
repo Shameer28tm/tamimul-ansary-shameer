@@ -1,27 +1,37 @@
 "use server";
-
-import { timingSafeEqual } from "node:crypto";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { createAdminSessionToken } from "@/lib/admin-session";
+import { createSessionToken, SESSION_TTL_SECONDS, sessionCookieName, verifyPassword, isAdminConfigured } from "@/lib/auth";
+
+const FAILURE_DELAY_MS = 750;
 
 export async function login(formData: FormData) {
-  const configuredPassword = process.env.ADMIN_PASSWORD;
-  const submittedPassword = formData.get("password");
-  if (!configuredPassword || typeof submittedPassword !== "string") redirect("/admin/login?error=1");
-
-  const expected = Buffer.from(configuredPassword);
-  const received = Buffer.from(submittedPassword);
-  const valid = expected.length === received.length && timingSafeEqual(expected, received);
-  if (!valid) redirect("/admin/login?error=1");
-
-  const token = await createAdminSessionToken();
-  (await cookies()).set("portfolio_admin", token, {
+  if (!isAdminConfigured()) redirect("/admin/login?error=config");
+  const ok = await verifyPassword(formData.get("password"));
+  if (!ok) {
+    // Slow down online guessing; serverless instances do not share memory, so a fixed delay is the portable option.
+    await new Promise((r) => setTimeout(r, FAILURE_DELAY_MS));
+    redirect("/admin/login?error=1");
+  }
+  const token = await createSessionToken();
+  if (!token) redirect("/admin/login?error=config");
+  (await cookies()).set(sessionCookieName(), token, {
     httpOnly: true,
-    sameSite: "strict",
     secure: process.env.NODE_ENV === "production",
-    path: "/admin",
-    maxAge: 60 * 60 * 8,
+    sameSite: "strict",
+    path: "/",
+    maxAge: SESSION_TTL_SECONDS,
   });
   redirect("/admin");
+}
+
+export async function logout() {
+  (await cookies()).set(sessionCookieName(), "", {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "strict",
+    path: "/",
+    maxAge: 0,
+  });
+  redirect("/admin/login");
 }

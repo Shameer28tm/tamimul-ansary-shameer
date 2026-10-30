@@ -1,17 +1,19 @@
 import { NextRequest, NextResponse } from "next/server";
-import { verifyAdminSessionToken } from "@/lib/admin-session";
+import { sessionCookieName, verifySessionToken } from "@/lib/auth";
 
 export async function middleware(request: NextRequest) {
-  const isLoginRoute = request.nextUrl.pathname === "/admin/login";
-  if (isLoginRoute) return NextResponse.next();
-
-  const token = request.cookies.get("portfolio_admin")?.value;
-  if (!(await verifyAdminSessionToken(token))) {
-    const loginUrl = new URL("/admin/login", request.url);
-    loginUrl.searchParams.set("next", request.nextUrl.pathname);
-    return NextResponse.redirect(loginUrl);
+  const { pathname } = request.nextUrl;
+  if (pathname === "/admin/login") return NextResponse.next();
+  const valid = await verifySessionToken(request.cookies.get(sessionCookieName())?.value);
+  if (!valid) {
+    const res = NextResponse.redirect(new URL("/admin/login", request.url));
+    res.headers.set("Cache-Control", "no-store");
+    return res;
   }
-  return NextResponse.next();
+  const res = NextResponse.next();
+  res.headers.set("Cache-Control", "no-store");
+  res.headers.set("X-Robots-Tag", "noindex, nofollow");
+  return res;
 }
 
-export const config = { matcher: ["/admin/:path*"] };
+export const config = { matcher: ["/admin", "/admin/:path*"] };
